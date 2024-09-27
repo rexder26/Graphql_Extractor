@@ -14,7 +14,6 @@ def extract_graphql_components(query):
         variables = match[1]  
         fields = match[2]  
 
-        
         field_pattern = r'(\w+)(:\w+)?(\{[^}]*\})?'
         field_matches = re.findall(field_pattern, fields)
         field_list = []
@@ -27,10 +26,6 @@ def extract_graphql_components(query):
                 'field_name': field_name,
                 'sub_fields': []
             }
-
-            if sub_fields:
-                
-                field_info['sub_fields'] = extract_graphql_components(sub_fields.strip('{}'))
 
             field_list.append(field_info)
 
@@ -55,7 +50,6 @@ def extract_graphql_queries(test_file):
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     return result.stdout.strip().splitlines()
 
-
 if __name__ == "__main__":
     
     if len(sys.argv) != 2:
@@ -74,4 +68,4 @@ if __name__ == "__main__":
     with open('graphql_data.txt', 'w') as output_file:
         json.dump(result, output_file, indent=4)
 
-    print("Extraction complete! Check graphql_data.txt.\n cat graphql_data.txt | jq .")
+    print("Extraction complete! Check graphql_data.txt.\n Use: cat graphql_data.txt | jq . or cat graphql_data.txt | jq '.[].query_name' ")
